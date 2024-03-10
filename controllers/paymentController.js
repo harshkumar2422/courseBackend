@@ -52,25 +52,27 @@ export const paymentverification = catchASyncError(async (req, res, next) => {
   await user.save();
 
   res.redirect(
-    // `${process.env.FRONTEND_URL}/paymentsuccess?reference=${razorpay_payment_id}`
+    `${process.env.FRONTEND_URL}/paymentsuccess?reference=${razorpay_payment_id}`
   );
 });
 
 export const razorpaykey = catchASyncError(async (req, res, next) => {
   res.status(200).json({
     success: true,
-    // key: process.env.RAZORPAY_API_KEY,
+    key: process.env.RAZORPAY_API_KEY,
   });
 });
 export const cancelsubscription = catchASyncError(async (req, res, next) => {
   const user = await User.findById(req.user._id);
 
   const subscriptionId = user.subscription.id;
+  console.log(subscriptionId);
   let refund = false;
   await instance.subscriptions.cancel(subscriptionId);
   const payment = await Payment.findOne({
     razorpay_subscription_id: subscriptionId,
   });
+  if(!subscriptionId) return next(new ErrorHandler('you are not subscribed',400))
   const gap = Date.now() - payment.createdAt;
   const refundTime = process.env.REFUND_DAYS * 24 * 60 * 60 * 1000;
 

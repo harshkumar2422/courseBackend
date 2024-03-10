@@ -35,7 +35,7 @@ export const courseRequest = catchASyncError(async (req, res, next) => {
   });
 });
 export const getDashBoardstats = catchASyncError(async (req, res, next) => {
-  const stats = await Stats.find({}).sort({ cretaedAt: "desc" }).limit(12);
+  const stats = await Stats.find({}).sort({ createdAt: "desc" }).limit(12);
 
   const statsdata = [];
 

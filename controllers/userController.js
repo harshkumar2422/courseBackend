@@ -71,10 +71,10 @@ export const logout = catchASyncError(async (req, res, next) => {
 });
 
 export const getalluser = async (req, res, next) => {
-  const user = await User.find().select("+password");
+  const users = await User.find().select("+password");
   res.status(200).json({
     success: true,
-    user,
+    users,
   });
 };
 
@@ -290,18 +290,19 @@ export const deletemyprofile = catchASyncError(async (req, res, next) => {
     });
 });
 
-User.watch().on("change",async()=>{
-  const stats = await Stats.find({}).sort({createdAt:"desc"}).limit(1);
-  const subscription = await User.find({"subscription.status":"active"})
-  try {
-    stats[0].subscription = subscription.length;
-    stats[0].users = await User.countDocuments()
-    stats[0].createdAt = new Date(Date.now())
-  
-    await stats[0].save()
-  } catch (error) {
-    console.log(error);
-  }
+// User.watch().on("change",async()=>{
+//   const stats = await Stats.find({}).sort({createdAt:"desc"}).limit(1);
+//   const subscription = await User.find({ "subscription.status": "active" })
+//   console.log(subscription.status);
+//   try {
+//     stats[0].subscription = subscription.length;
+//     stats[0].users = await User.countDocuments()
+//     stats[0].createdAt = new Date(Date.now())
+    
+//     await stats[0].save()
+//   } catch (error) {
+//     console.log(error);
+//   }
  
 
-})
+// })
